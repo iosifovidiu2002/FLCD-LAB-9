@@ -1,0 +1,23 @@
+
+
+<func> <main> <(> <)> <zilch> <{> 
+
+<var> <ID, x> <int> 
+<var> <ID, c> <bool> <=> <true> 
+<var> <ID, sum> <int> <=> <NUM, 0> 
+<var> <ID, temp> <int> <=> <ID, x> 
+
+<read> <(> <ID, x> <)> 
+
+<repeat> <(> <ID, x> <>> <NUM, 0> <and> <ID, x> <<> <NUM, 100> <)> <{> 
+<ID, sum> <=> <ID, sum> <BIN_OP, +> <(> <ID, sum> <BIN_OP, *> <NUM, 10> <)> <BIN_OP, +> <ID, x> <BIN_OP, %> <NUM, 10> 
+<ID, x> <=> <ID, x> <BIN_OP, /> <NUM, 10> 
+<}> 
+
+<assume> <(> <ID, temp> <TWO_BIN_OP, ==> <ID, sum> <)> <{> 
+<write> <(> <CHAR, P> <)> 
+<}> <otherwise> <{> 
+<write> <(> <CHAR, N> <)> 
+<}> 
+
+<}> 
