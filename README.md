@@ -1,18 +1,18 @@
-# How to generate a lexical scanner using ___flex___
+# How to use ___flex___ with ___yacc___
 ## Step 1
 ```
-flex lex.l
+yacc -d parser.y
 ```
 ## Step 2
 ```
-cc -Wall -c lex.yy.c
+lex lex.l
 ```
 ## Step 3
 ```
-cc -Wall lex.c lex.yy.o
+cc lex.yy.c y.tab.c -o bas.exe
 ```
 ## Step 4
 ```
-./a.out < input > out
+./bas.exe my_program.mini
 ```
 
