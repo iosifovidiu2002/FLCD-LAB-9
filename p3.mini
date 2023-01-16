@@ -1,0 +1,27 @@
+/* Compute average of n numbers */
+
+func main(): zilch{
+    
+    sum = 0
+    final count: int
+
+    read(count)
+    var current_elem: int
+    var number_list: int[count]
+    var current_index : int = 0
+    parse(var i: int = 0 : i < count : 1){
+        read(current_elem)
+        number_list[current_index]=current_elem
+        current_index = (current_index + 1)
+    }
+
+    parse(var i: int = 0 : i < count : 1){
+        sum = (sum + number_list[i])
+    }
+
+    var avg : int
+    avg = (sum / count)
+
+    write(avg)
+
+}

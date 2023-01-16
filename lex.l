@@ -2,13 +2,13 @@
 #include <string.h>
 #include <stdlib.h>
 #include "y.tab.h" // tokens are defined
-int line_count = 0; yylType yylval;
+int line_count = 0;
 %}
 
 %option noyywrap
 %x CMNT
 
-DELIM ([ \t:])
+DELIM ([ \t\n])
 WHITESPACES ({DELIM}+)
 POSI_DECI ([1-9])
 DECI (0|{POSI_DECI})
@@ -23,16 +23,9 @@ IDENTIFIER ({LETTER}({LETTER}|{DECI})*)
 <CMNT>. {;}
 <CMNT>\n {++line_count;}
 <CMNT>"*/" {BEGIN INITIAL;}
-\n {
-++line_count;
-return (int)'\n';
-}
 
 "\'"."\'" {
-            yylval.string=(char *)malloc((yyleng+1)*(sizeof(char)));
-            strncpy(yylval.string, yytext+1, yyleng-2);
-            yylval.string[yyleng-2]='\0';
-            return CHAR;
+            return CHARACTER;
             }
 
 {WHITESPACES} { ; }
@@ -52,64 +45,51 @@ bool { return BOOL; }
 char { return CHAR; }
 
 "<=" { 
-    yylval.string=(char *)malloc((yyleng+1)*(sizeof(char)));
-    strncpy(yylval.string, yytext, yyleng + 1);
-    return TWO_BIN_OP;
+    return LTE;
     }
 
 ">=" { 
-    yylval.string=(char *)malloc((yyleng+1)*(sizeof(char)));
-    strncpy(yylval.string, yytext, yyleng + 1);
-    return TWO_BIN_OP;
+    return GTE;
     }
 
 "==" { 
-    yylval.string=(char *)malloc((yyleng+1)*(sizeof(char)));
-    strncpy(yylval.string, yytext, yyleng + 1);
-    return TWO_BIN_OP;
+    return EQ;
     }
 
 "!=" { 
-    yylval.string=(char *)malloc((yyleng+1)*(sizeof(char)));
-    strncpy(yylval.string, yytext, yyleng + 1);
-    return TWO_BIN_OP;
+    return NEQ;
     }
 
-\( { return (int)'('; }
-\) { return (int)')'; }
-\[ { return (int)'['; }
-\] { return (int)']'; }
-\{ { return (int)'{'; }
-\} { return (int)'}'; }
-; { return (int)';'; }
-, { return (int)','; }
-= { return (int)'='; }
-"<" { return (int)'<'; }
-\> { return (int)'>'; }
-
+\( { return OPENBRACKET; }
+\) { return CLOSEBRACKET; }
+\[ { return OPENEDGEBRACKET; }
+\] { return CLOSEEDGEBRACKET; }
+\{ { return OPENCURLYBRACKET; }
+\} { return CLOSECURLYBRACKET; }
+; { return SEMICOLON; }
+, { return COMMA; }
+= { return ASSIGN; }
+"<" { return LT; }
+\> { return GT; }
+":" { return COLON;}
 "%" {
-    yylval.integer = (int)'%';
-    return BIN_OP;
+    return MOD;
     }
 
 "+" {
-    yylval.integer = (int)'+';
-    return BIN_OP;
+    return ADD;
     }
 
 "-" {
-    yylval.integer = (int)'-';
-    return BIN_OP;
+    return SUB;
     }
 
 "*" {
-    yylval.integer = (int)'*';
-    return BIN_OP;
+    return MUL;
     }
 
 "/" {
-    yylval.integer = (int)'/';
-    return BIN_OP;
+    return DIV;
     }
 
 and { return AND; }
@@ -121,13 +101,10 @@ true { return TRUE; }
 false { return FALSE;}
 
 {IDENTIFIER} {
-    yylval.string=(char *)malloc((yyleng+1)*(sizeof(char)));
-    strncpy(yylval.string, yytext, yyleng + 1);
     return ID;
     }
 
 {DECIMAL} {
-    yylval.integer = atoi(yytext);
     return NUM;
     }
 
